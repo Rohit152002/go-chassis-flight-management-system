@@ -1,0 +1,4 @@
+servicecomb:
+  service:
+    name: flight-service
+    version: 1.0.0
