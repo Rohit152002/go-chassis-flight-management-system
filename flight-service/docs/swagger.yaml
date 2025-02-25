@@ -1,0 +1,187 @@
+basePath: /
+definitions:
+  models.FlightDTO:
+    properties:
+      airline:
+        type: string
+      arrival_time:
+        type: string
+      departure_time:
+        type: string
+      destination:
+        type: string
+      flight_number:
+        type: string
+      origin:
+        type: string
+    type: object
+  models.FlightResponse:
+    properties:
+      airline:
+        type: string
+      arrival_time:
+        type: string
+      createdAt:
+        type: string
+      delatedAt:
+        type: string
+      departure_time:
+        type: string
+      destination:
+        type: string
+      flight_number:
+        type: string
+      id:
+        type: string
+      origin:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server FlightManager server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /flights:
+    post:
+      consumes:
+      - application/json
+      description: Create a new flight with the input payload
+      parameters:
+      - description: Flights
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.FlightDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.FlightResponse'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new flight
+      tags:
+      - flights
+  /flights/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a flight by ID
+      parameters:
+      - description: Flight ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a flight by ID
+      tags:
+      - flights
+    get:
+      consumes:
+      - application/json
+      description: Get a flight by ID
+      parameters:
+      - description: Flight ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FlightResponse'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a flight by ID
+      tags:
+      - flights
+    put:
+      consumes:
+      - application/json
+      description: Update a flight by ID
+      parameters:
+      - description: Flight ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Flights
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.FlightDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.FlightResponse'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a flight by ID
+      tags:
+      - flights
+  /flights/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all flights
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.FlightResponse'
+            type: array
+      summary: Get all flights
+      tags:
+      - flights
+swagger: "2.0"

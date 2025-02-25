@@ -7,4 +7,5 @@ type FlightCRUDService interface {
 	GetFlight(flightID uint) (models.FlightResponse, error)
 	UpdateFlight(flightID uint, flight models.FlightDTO) (models.FlightResponse, error)
 	DeleteFlight(flightID uint) error
+	GetAllFlight() ([]models.FlightResponse, error)
 }

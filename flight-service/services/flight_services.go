@@ -3,6 +3,9 @@ package services
 import (
 	"flight-service/interfaces"
 	"flight-service/models"
+	"time"
+
+	"strconv"
 
 	"go.uber.org/zap"
 )
@@ -25,7 +28,7 @@ func flightMapping(flightDto models.FlightDTO) models.Flight {
 
 func flightResponseMapping(flight models.Flight) models.FlightResponse {
 	return models.FlightResponse{
-		ID:        string(rune(flight.Model.ID)),
+		ID:        strconv.FormatUint(uint64(flight.Model.ID), 10),
 		CreatedAt: flight.CreatedAt,
 		UpdatedAt: flight.UpdatedAt,
 		DelatedAt: &flight.DeletedAt.Time,
@@ -77,6 +80,7 @@ func (f *flightService) GetFlight(flightID uint) (models.FlightResponse, error) 
 // UpdateFlight implements interfaces.FlightCRUDService.
 func (f *flightService) UpdateFlight(flightID uint, flight models.FlightDTO) (models.FlightResponse, error) {
 	flightModel := flightMapping(flight)
+	flightModel.UpdatedAt = time.Now()
 	updatedFlight, err := f.flightRepository.Update(flightID, &flightModel)
 	if err != nil {
 		f.logger.Error("Failed to update flight :: services")
@@ -84,6 +88,20 @@ func (f *flightService) UpdateFlight(flightID uint, flight models.FlightDTO) (mo
 	}
 	f.logger.Info("Flight updated successfully :: services")
 	return flightResponseMapping(*updatedFlight), nil
+}
+
+func (f *flightService) GetAllFlight() ([]models.FlightResponse, error) {
+	flights, err := f.flightRepository.GetAll()
+	if err != nil {
+		f.logger.Error("Failed to get all flights :: services")
+		return nil, err
+	}
+	f.logger.Info("All flights retrieved successfully :: services")
+	var flightResponses []models.FlightResponse
+	for _, flight := range flights {
+		flightResponses = append(flightResponses, flightResponseMapping(*flight))
+	}
+	return flightResponses, nil
 }
 
 func NewFlightService(repo interfaces.FlightRepository, logger *zap.Logger) interfaces.FlightCRUDService {

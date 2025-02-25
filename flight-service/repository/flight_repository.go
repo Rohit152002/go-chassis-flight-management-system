@@ -1,7 +1,7 @@
 package repository
 
 import (
-	interfaces "flight-service/Interfaces"
+	"flight-service/interfaces"
 	"flight-service/models"
 
 	"go.uber.org/zap"
@@ -25,18 +25,18 @@ func (f *flightRepository) Create(flight *models.Flight) (*models.Flight, error)
 
 // Delete implements interfaces.FlightRepository.
 func (f *flightRepository) Delete(id uint) error {
-	if err := f.db.Delete(&models.Flight{}, id).Error; err != nil {
-		f.Logger.Error("Failed to delete :: repositories")
+	if err := f.db.Where("id = ?", id).Delete(&models.Flight{}).Error; err != nil {
+		f.Logger.Error("Failed to delete :: repository")
 		return err
 	}
-	f.Logger.Info("Flight deleted successfully :: repositories")
+	f.Logger.Info("Flight deleted successfully :: repository")
 	return nil
 }
 
 // Get implements interfaces.FlightRepository.
 func (f *flightRepository) Get(id uint) (*models.Flight, error) {
 	var flight models.Flight
-	if err := f.db.First(&flight, id).Error; err != nil {
+	if err := f.db.First(&flight).Error; err != nil {
 		f.Logger.Error("Failed to get :: repositories")
 		return nil, err
 	}
