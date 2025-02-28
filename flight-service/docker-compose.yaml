@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  service-center:
+    image: servicecomb/service-center:latest
+    container_name: service-center-go
+    ports:
+      - "30100:30100"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://service-center:30100/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+  go-microservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-microservice
+    environment:
+      - SERVICE_CENTER_ENDPOINT=http://service-center:30100
+
+      # Go Chassis environment variables
+      - CHASSIS_CONF_DIR=/app/conf
+      
+      # Google Cloud authentication
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/credentials/credentials.json
+      
+      # Spanner database configuration
+      - DATABASE_ID=microservice
+      - INSTANCE_ID=microservice
+      - PROJECT_ID=microservices-451611
+      
+      # Add any other environment variables needed by your application
+    depends_on:
+      service-center:
+        condition: service_healthy
+    volumes:
+      - ./conf:/app/conf
+      - ./credentials:/app/credentials
+    ports:
+      - "8080:8080"  # Adjust the port as needed for your microservice
+    restart: unless-stopped
+
+ 

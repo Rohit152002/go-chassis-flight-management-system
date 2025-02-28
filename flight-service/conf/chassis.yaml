@@ -1,21 +1,21 @@
 servicecomb:
   # Service Registration (Connect to Service Center)
   registry:
-    address: http://127.0.0.1:30100  # If using Nginx Load Balancer
+    address: http://service-center:30100 # If using Nginx Load Balancer
     # If directly connecting to multiple instances, use:
     # address: http://127.0.0.1:30100, http://127.0.0.1:30101, http://127.0.0.1:30102
-    heartbeat: 30s   # Heartbeat interval for instance health check
-    autodiscovery: true  # Enable automatic discovery of instances
+    heartbeat: 30s # Heartbeat interval for instance health check
+    autodiscovery: true # Enable automatic discovery of instances
 
   # Load Balancing Configuration
   loadbalance:
     strategy:
-      name: RoundRobin  # Other options: Random, WeightedResponse, ConsistentHash
+      name: RoundRobin # Other options: Random, WeightedResponse, ConsistentHash
     retry:
-      onSame: 3  # Retry attempts on the same instance
-      onNext: 2  # Retry attempts on another instance
+      onSame: 3 # Retry attempts on the same instance
+      onNext: 2 # Retry attempts on another instance
     backoff:
-      kind: exponential  # Exponential backoff for retries
+      kind: exponential # Exponential backoff for retries
       minMs: 100
       maxMs: 3000
 
@@ -26,15 +26,13 @@ servicecomb:
         - endpoints:
             - rest://127.0.0.1:8080
 
-
   # Protocol Configuration (Multiple Instances)
   protocols:
     rest:
-      listenAddress: 127.0.0.1:8080   # Change this per instance (e.g., 8081, 8082, 8083)
+      listenAddress: 127.0.0.1:8080 # Change this per instance (e.g., 8081, 8082, 8083)
   # Add gRPC support if needed
 
   # Transport Layer Security (TLS)
-
 
   # Fault Tolerance (Circuit Breaker, Rate Limiting)
   governance:
@@ -52,7 +50,7 @@ servicecomb:
       rateLimiting:
         flight-service:
           enable: true
-          rate: 100  # Requests per second
+          rate: 100 # Requests per second
 
   # Monitoring (Optional - Use Prometheus)
   metrics:

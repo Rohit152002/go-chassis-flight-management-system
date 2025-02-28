@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flight-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flight-microservice
+  template:
+    metadata:
+      labels:
+        app: flight-microservice
+    spec:
+      containers:
+        - name: flight-microservice
+          image: gcr.io/microservices-451611/flight-microservice:v1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CHASSIS_CONF_DIR
+              value: "/app/conf"
+            - name: SERVICE_CENTER_ENDPOINT
+              value: "http://service-center:30100"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/app/credentials/credentials.json"
+            - name: DATABASE_ID
+              value: "microservice"
+            - name: INSTANCE_ID
+              value: "microservice"
+            - name: PROJECT_ID
+              value: "microservices-451611"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/conf
+            - name: credentials-volume
+              mountPath: /app/
+      volumes:
+        - name: config-volume
+          configMap:
+            name: chassis-config
+        - name: credentials-volume
+          secret:
+            secretName: gcp-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flight-microservice
+spec:
+  selector:
+    app: flight-microservice
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

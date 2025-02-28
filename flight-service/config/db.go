@@ -20,7 +20,8 @@ func ConnectDb() *gorm.DB {
 	}), &gorm.Config{})
 
 	if err != nil {
-		panic("Failed to connect to database" + err.Error())
+		panic("dns string: " + getDatabaseString() + "err: " + err.Error())
+
 	}
 	db.AutoMigrate(models.Flight{})
 	return db

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chassis-config
+data:
+  chassis.yaml: |
+    cse:
+      service:
+        registry:
+          address: http://service-center:30100
+          disabled: false

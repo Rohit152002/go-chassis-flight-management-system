@@ -27,7 +27,7 @@ func init() {
 }
 
 // @title Swagger Example API
-// @version 1.0
+// @version 2.0
 // @description This is a sample server FlightManager server.
 // @termsOfService http://swagger.io/terms/
 
@@ -43,6 +43,7 @@ func init() {
 func main() {
 
 	if err := godotenv.Load(); err != nil {
+
 		panic("Error loading .env file")
 	}
 
