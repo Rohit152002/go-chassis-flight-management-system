@@ -23,6 +23,7 @@ kind: Service
 metadata:
   name: service-center
 spec:
+  type: ClusterIP
   selector:
     app: service-center
   ports:

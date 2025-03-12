@@ -15,6 +15,7 @@ spec:
       containers:
         - name: flight-microservice
           image: gcr.io/microservices-451611/flight-microservice:v1
+          command: ["/app/main"]
           ports:
             - containerPort: 8080
           env:
@@ -34,7 +35,7 @@ spec:
             - name: config-volume
               mountPath: /app/conf
             - name: credentials-volume
-              mountPath: /app/
+              mountPath: /app/credentials
       volumes:
         - name: config-volume
           configMap:

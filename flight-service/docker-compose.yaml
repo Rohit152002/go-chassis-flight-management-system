@@ -6,11 +6,7 @@ services:
     container_name: service-center-go
     ports:
       - "30100:30100"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://service-center:30100/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    
     restart: unless-stopped
   go-microservice:
     build:
@@ -32,9 +28,8 @@ services:
       - PROJECT_ID=microservices-451611
       
       # Add any other environment variables needed by your application
-    depends_on:
-      service-center:
-        condition: service_healthy
+    
+      
     volumes:
       - ./conf:/app/conf
       - ./credentials:/app/credentials

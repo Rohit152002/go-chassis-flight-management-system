@@ -4,8 +4,62 @@ metadata:
   name: chassis-config
 data:
   chassis.yaml: |
-    cse:
+    servicecomb:
+      # Service Registration (Connect to Service Center)
+      registry:
+        address: http://service-center:30100
+        heartbeat: 30s
+        autodiscovery: true
+
+      # Load Balancing Configuration
+      loadbalance:
+        strategy:
+          name: RoundRobin
+        retry:
+          onSame: 3
+          onNext: 2
+        backoff:
+          kind: exponential
+          minMs: 100
+          maxMs: 3000
+
+      # Define available service instances
       service:
-        registry:
-          address: http://service-center:30100
-          disabled: false
+        flight-service:
+          instances:
+            - endpoints:
+                - rest://127.0.0.1:8080
+
+      # Protocol Configuration (Multiple Instances)
+      protocols:
+        rest:
+          listenAddress: 0.0.0.0:8080  # Changed from 127.0.0.1 to 0.0.0.0 to accept external connections
+
+      # Fault Tolerance (Circuit Breaker, Rate Limiting)
+      governance:
+        consumer:
+          # Circuit Breaker (Auto-disable failing instances)
+          circuitBreaker:
+            flight-service:
+              enable: true
+              timeoutInMilliseconds: 5000
+              requestVolumeThreshold: 20
+              failureRatio: 0.5
+              recoveryTimeoutInMilliseconds: 10000
+
+          # Rate Limiting (Throttle high traffic)
+          rateLimiting:
+            flight-service:
+              enable: true
+              rate: 100
+
+      # Monitoring (Optional - Use Prometheus)
+      metrics:
+        enable: true
+        flushInterval: 10s
+
+  microservice.yaml: |
+    servicecomb:
+      service:
+        name: flight-service
+        version: 1.0.0
